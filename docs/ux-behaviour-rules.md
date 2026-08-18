@@ -1282,11 +1282,23 @@ During implementation:
 | Artificial Percentage  | Not allowed                             |
 | Global Loading Overlay | Avoid unless necessary                  |
 | Unknown Backend State  | Neutral safe fallback                   |
-| Authentication UX      | Not part of MVP                         |
+| Authentication UX      | Login, restore, expiry, logout, single session |
 
 ---
 
-# 66. Decisions Deferred
+# 66. Authentication UX
+
+On startup, check the current session before rendering protected content. Show
+the Login page for an unauthenticated or expired session and preserve only a
+validated internal requested destination. Successful login uses the returned
+session immediately. Logout and any session-invalidating `401` clear protected
+query data before returning to `/login`. A `CSRF_TOKEN_INVALID` `403` may cause
+one shared session refresh, but the failed mutation is not replayed
+automatically. A second login elsewhere ends the earlier browser session.
+
+---
+
+# 67. Decisions Deferred
 
 The following may be finalized during implementation or later UX documentation:
 

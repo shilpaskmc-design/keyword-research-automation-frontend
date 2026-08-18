@@ -1267,6 +1267,20 @@ Do not refactor purely to introduce patterns that the MVP does not need.
 19. Remove debug/dead code.
 20. Ensure typecheck, lint, build, and relevant tests pass.
 
+Authentication-specific guardrails:
+
+* Route every application screen through the shared `AuthGate`.
+* Use the shared API client with `credentials: "include"`; do not add bearer
+  tokens or read the HttpOnly cookie.
+* Keep the CSRF token in runtime memory only and send it through
+  `X-CSRF-Token` on state-changing requests.
+* Clear protected TanStack Query data when authentication ends.
+* Treat `401` as an ended/invalid session and the stable
+  `CSRF_TOKEN_INVALID` `403` as a one-time session-refresh signal without
+  automatically replaying mutations.
+* For local development, use `localhost` for both frontend and backend origins;
+  never mix it with `127.0.0.1`.
+
 ---
 
 # 60. Related Documents

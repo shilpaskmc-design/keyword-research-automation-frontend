@@ -181,21 +181,11 @@ Avoid speculative implementation for possible future features.
 
 # 6. Authentication and Roles
 
-Authentication and role-based access control are not part of the current MVP.
-
-Do not introduce:
-
-```text
-Login flows
-Authentication providers
-Protected routes
-Role guards
-Permission systems
-Token refresh systems
-User session infrastructure
-```
-
-unless explicitly requested.
+Single-user cookie-session authentication is approved for the current MVP.
+Use the approved OpenAPI login/session/logout contract, protected routes, and
+runtime-only CSRF handling. Roles, permissions, RBAC, signup, password recovery,
+token refresh systems, and browser storage of session credentials remain out of
+scope unless explicitly approved later.
 
 ---
 

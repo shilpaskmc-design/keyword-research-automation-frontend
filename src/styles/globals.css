@@ -1,3 +1,72 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+    --surface: 0 0% 100%;
+    --surface-muted: 210 20% 96%;
+    --border: 214 20% 84%;
+    --muted: 210 20% 94%;
+    --muted-foreground: 215 16% 40%;
+    --primary: 217 91% 50%;
+    --primary-hover: 221 83% 45%;
+    --primary-active: 224 76% 38%;
+    --primary-foreground: 0 0% 100%;
+    --success: 142 71% 35%;
+    --warning: 32 95% 44%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --info: 199 89% 40%;
+    --input: 214 20% 80%;
+    --ring: 217 91% 50%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --secondary: 210 20% 94%;
+    --secondary-foreground: 222 47% 16%;
+    --accent: 214 95% 93%;
+    --accent-foreground: 222 47% 16%;
+    --radius-sm: 0.25rem;
+    --radius: 0.5rem;
+    --radius-lg: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body {
+    @apply min-h-screen bg-background font-sans text-foreground;
+  }
+
+  body {
+    @apply antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  ::selection {
+    @apply bg-primary/20 text-foreground;
+  }
+}
+
+@layer components {
+  .skip-link {
+    @apply fixed left-4 top-4 z-[100] -translate-y-24 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-lg transition-transform focus:translate-y-0;
+  }
+
+  .live-region-text {
+    @apply text-supporting text-muted-foreground;
+  }
+
+  .status-message {
+    @apply rounded-md border bg-surface px-4 py-3 text-supporting;
+  }
+}

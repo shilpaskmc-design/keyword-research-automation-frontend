@@ -1587,7 +1587,25 @@ During implementation:
 
 ---
 
-# 28. Decisions Deferred
+# 28. Authentication Components
+
+Authentication is implemented through feature-owned components under
+`src/features/auth/`:
+
+| Component | Responsibility |
+| --- | --- |
+| `AuthProvider` | Canonical session query, runtime CSRF token, login/logout lifecycle, protected-query cleanup |
+| `AuthGate` | Blocks protected routes, handles checking/error states, and preserves safe internal destinations |
+| `LoginPage` / `LoginForm` | Accessible single-user credential entry and authenticated redirect |
+| `ProfileMenu` | Authenticated email display and logout action in desktop/mobile navigation |
+
+These components do not implement roles, permissions, signup, recovery, or
+browser credential persistence. The shared API client—not feature
+components—owns credential inclusion and CSRF header injection.
+
+---
+
+# 29. Decisions Deferred
 
 The following should be decided during implementation only if needed:
 
@@ -1602,7 +1620,7 @@ The following should be decided during implementation only if needed:
 
 ---
 
-# 29. Related Documents
+# 30. Related Documents
 
 ```text
 01. Product Scope & Screen Inventory

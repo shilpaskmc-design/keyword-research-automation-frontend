@@ -451,22 +451,26 @@ Tooltip visibility
 
 # 13. Authentication Architecture
 
-Authentication is not part of the current MVP.
-
-Therefore the MVP does not require:
+The MVP uses one backend-managed authentication user. Authentication is
+implemented with a persistent server-side session represented in the browser by
+an HttpOnly cookie. The frontend never reads or stores the session credential.
 
 ```text
-Login routes
-Protected routes
-Role guards
-Permission components
-Session management
-Token refresh logic
+Startup → GET /api/v1/auth/session → AuthGate → protected AppLayout
+Login → POST /api/v1/auth/login → initialize auth query + runtime CSRF token
+Logout → POST /api/v1/auth/logout → clear auth state and protected query cache
+401 → clear authenticated state → /login
+CSRF 403 → refresh session once → do not replay the mutation automatically
 ```
 
-Do not introduce placeholder authentication architecture unless authentication is actually being implemented.
+`AuthProvider` owns the canonical authentication query and runtime-only CSRF
+token. `AuthGate` protects application routes and preserves only validated
+internal destinations. The shared API client always uses
+`credentials: "include"` and injects `X-CSRF-Token` for authenticated
+state-changing requests.
 
-The routing architecture should still remain capable of adding authentication later without restructuring feature modules.
+Roles, permissions, RBAC, signup, password recovery, refresh tokens, and browser
+storage of credentials remain out of scope.
 
 ---
 
@@ -1268,13 +1272,14 @@ Use these when actual application behavior justifies them.
 
 # 48. Security Boundary
 
-The frontend must be treated as an untrusted client.
-
-Even though the MVP currently has no authentication, the frontend must not be responsible for enforcing critical backend business rules.
+The frontend must be treated as an untrusted client. Authentication-aware UI
+does not replace backend route protection or backend business-rule enforcement.
 
 Never place secrets in frontend code or Vite environment variables.
 
 Anything shipped to the browser must be considered visible to the user.
+The CSRF token may be read by authenticated frontend JavaScript but must remain
+in runtime memory only. The session credential remains in an HttpOnly cookie.
 
 ---
 
@@ -1391,7 +1396,7 @@ Backend API
 | Validation           | Zod where appropriate                       |
 | HTTP                 | Native Fetch through centralized API client |
 | Business Rules       | Backend authoritative                       |
-| Authentication       | Out of MVP                                  |
+| Authentication       | Single-user HttpOnly cookie session         |
 | Feature Organization | By product feature                          |
 | Testing Architecture | Defined separately                          |
 
@@ -1417,7 +1422,7 @@ The following do not need to be finalized in this document:
 * detailed form validation rules;
 * test coverage requirements;
 * production deployment implementation;
-* future authentication architecture.
+* future role-based authorization architecture.
 
 These belong in their respective documents or implementation decisions.
 
