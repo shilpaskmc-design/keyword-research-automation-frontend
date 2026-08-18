@@ -1054,7 +1054,18 @@ Before completing a screen, verify:
 
 ---
 
-# 49. Related Documents
+# 49. Authentication Accessibility and Responsiveness
+
+The Login page remains usable at all supported widths, keeps its card within
+the viewport, provides programmatic labels for email/password, uses an `h1` for
+the login purpose, and exposes validation/network errors to assistive
+technology. Session-check loading and failure states must be readable and
+retryable. The desktop and mobile navigation must both keep Profile/Logout
+keyboard accessible without horizontal overflow.
+
+---
+
+# 50. Related Documents
 
 ```text
 01. Product Scope & Screen Inventory

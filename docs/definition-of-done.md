@@ -422,7 +422,22 @@ Use this condensed checklist during implementation:
 
 ---
 
-# 20. Completion Rule
+# 20. Authentication Completion
+
+For authentication-affecting changes:
+
+* [ ] Valid login initializes the authenticated session without an unnecessary second login.
+* [ ] Invalid credentials and expired/revoked sessions produce safe `401` behavior.
+* [ ] Refresh restores a valid server-side session.
+* [ ] Direct protected URLs return to the validated internal destination after login.
+* [ ] Logout sends valid CSRF, clears frontend auth/protected query state, and returns to `/login`.
+* [ ] State-changing requests send the runtime `X-CSRF-Token`; session credentials are never stored in frontend code or browser storage.
+* [ ] A second login invalidates the earlier session without leaving stale protected UI.
+* [ ] Local verification uses `http://localhost:5173` with `VITE_API_BASE_URL=http://localhost:8000`; `localhost` and `127.0.0.1` are not mixed.
+
+---
+
+# 21. Completion Rule
 
 A task may be marked:
 
@@ -444,7 +459,7 @@ Minor non-blocking enhancements should be tracked separately rather than prevent
 
 ---
 
-# 21. Related Documents
+# 22. Related Documents
 
 ```text
 01. Product Scope & Screen Inventory

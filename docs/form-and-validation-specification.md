@@ -822,7 +822,18 @@ Use OpenAPI/backend/product decisions when available.
 
 ---
 
-# 40. Related Documents
+# 40. Login Form
+
+The login form contains email and password fields and uses the generated
+`LoginRequest` contract. Both fields are required. Preserve entered email after
+a failed request, do not expose the password, prevent duplicate submission, and
+map `401 AUTH_INVALID_CREDENTIALS` to safe form-level feedback. A `422` remains
+backend validation feedback; network/session-check failures remain recoverable.
+Do not add signup, recovery, remember-me, or role selection controls.
+
+---
+
+# 41. Related Documents
 
 ```text
 01. Product Scope & Screen Inventory

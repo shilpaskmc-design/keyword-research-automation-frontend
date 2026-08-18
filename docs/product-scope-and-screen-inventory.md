@@ -94,21 +94,21 @@ Marketing users need to:
 
 # 4. Access Control Scope
 
-Role-based access control is not currently defined as part of the frontend product scope.
-
-The current specifications assume marketing-team users can access the required functionality.
+The MVP has one authenticated marketing user backed by the backend database.
+There is no signup or multi-user management interface.
 
 In particular:
 
-* Business Profile currently has no role restrictions.
+* Every application/data screen requires the authenticated session.
 * Service Taxonomy is read-only for users.
 * No separate administrator experience has been defined.
 * No role-specific navigation has currently been specified.
+* Login, session restoration, logout, session expiry, and single-session
+  invalidation are part of the approved product flow.
 
-Authentication and future role-based authorization should be treated as a separate product/architecture decision if required.
-
-> [!warning] Open Decision
-> Authentication requirements, user management, session management, and future role definitions have not been established by the current screen specifications and should not be invented during frontend implementation.
+Role-based authorization, permissions, invitations, teams, password recovery,
+and additional user accounts remain separate future product decisions and must
+not be inferred from single-user authentication.
 
 ---
 
@@ -141,6 +141,12 @@ Application
 ```
 
 These should form the primary frontend navigation.
+
+`/login` is a supporting authentication screen outside the primary
+navigation and outside `AppLayout`. It contains the single-user login form.
+Authenticated users are redirected into the application; unauthenticated users
+cannot render the five primary screens. The navigation Profile utility exposes
+the authenticated email and Logout but is not a separate Profile screen.
 
 Exact URL routes should be finalized in the frontend architecture/routing specification.
 

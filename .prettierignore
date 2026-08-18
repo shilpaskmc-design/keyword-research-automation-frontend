@@ -4,3 +4,4 @@ dist
 docs
 AGENTS.md
 package-lock.json
+src/api/generated/

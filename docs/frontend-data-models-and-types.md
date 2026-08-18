@@ -1060,7 +1060,25 @@ Local UI State
 
 ---
 
-# 43. Related Documents
+# 43. Authentication Types
+
+Use generated OpenAPI types for login input and authentication responses. The
+response data contains only:
+
+```text
+user.id
+user.email
+session.expires_at
+csrf_token
+```
+
+The raw session credential is not a frontend data model because it exists only
+in the backend-set HttpOnly cookie. Keep `csrf_token` in runtime auth state; do
+not persist it or duplicate generated authentication DTOs manually.
+
+---
+
+# 44. Related Documents
 
 ```text
 01. Product Scope & Screen Inventory

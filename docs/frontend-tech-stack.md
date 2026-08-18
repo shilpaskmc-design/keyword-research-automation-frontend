@@ -504,6 +504,11 @@ Backend API
 
 UI components should not contain scattered raw API calls.
 
+The shared native-fetch client also owns cookie-session transport through
+`credentials: "include"`, runtime `X-CSRF-Token` injection, and normalized
+authentication events. No bearer-token library, cookie-reading dependency, or
+browser credential store is required.
+
 ---
 
 # 13. API Contract
@@ -670,6 +675,16 @@ feature configuration
 ```
 
 Do not commit secrets into frontend source control.
+
+Local development is intentionally fixed to these browser origins:
+
+```text
+Frontend: http://localhost:5173
+Backend:  http://localhost:8000
+```
+
+Do not replace only one side with `127.0.0.1`; that creates a different browser
+site and breaks the development `SameSite=Lax` authentication cookie.
 
 ---
 
