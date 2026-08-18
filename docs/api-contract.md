@@ -593,7 +593,32 @@ VITE_API_BASE_URL
 
 Do not hard-code staging or production URLs inside feature code.
 
-Authentication is not part of the current MVP.
+For local development, hostname consistency is mandatory:
+
+```env
+VITE_API_BASE_URL=http://localhost:8000
+```
+
+Open the frontend at `http://localhost:5173` and configure backend
+`CORS_ORIGINS=["http://localhost:5173"]`. Do not mix `localhost` with
+`127.0.0.1`; browsers treat them as different sites and block the local
+`SameSite=Lax` session cookie on credentialed requests.
+
+The authentication contract is:
+
+```text
+POST /api/v1/auth/login
+GET  /api/v1/auth/session
+POST /api/v1/auth/logout
+```
+
+All requests use `credentials: "include"`. Login and session responses return
+the authenticated user, session expiry, and a session-bound CSRF token. The
+session credential is only an HttpOnly cookie. The CSRF token is stored only in
+runtime memory and sent as `X-CSRF-Token` on authenticated `POST`, `PUT`,
+`PATCH`, and `DELETE` requests. `401` ends frontend authentication state;
+`403` with `CSRF_TOKEN_INVALID` triggers one session refresh without automatic
+mutation replay. Exact schemas and error responses remain OpenAPI-authoritative.
 
 ---
 
