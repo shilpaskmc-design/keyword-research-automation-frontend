@@ -655,6 +655,12 @@ Example:
 
 No **View Results** action is required for failed runs unless Final Results actually exist and product requirements later define that behavior.
 
+When the backend includes `resume` in a failed execution's `allowed_actions`,
+the existing Action cell shows a minimal **Resume** button. The backend-provided
+allowed action is authoritative; the frontend must not derive resumability from
+the recovery state. Resume uses the existing execution progress experience and
+does not introduce a separate workflow or progress display.
+
 The Dashboard must not expose:
 
 - stack traces;

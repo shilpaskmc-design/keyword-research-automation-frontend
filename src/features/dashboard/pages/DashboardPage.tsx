@@ -21,6 +21,23 @@ import {
   useScheduleCutoff,
 } from '@/features/pipeline/hooks/usePipelineSchedule';
 import { Button } from '@/components/ui/button';
+import { isApiError } from '@/api/errors';
+
+function getResumeErrorMessage(error: unknown) {
+  if (!error) return undefined;
+  if (isApiError(error)) {
+    if (error.code === 'PIPELINE_ALREADY_ACTIVE') {
+      return 'Another pipeline run is already active.';
+    }
+    if (error.code === 'PIPELINE_NOT_RESUMABLE') {
+      return 'This pipeline run can no longer be resumed.';
+    }
+    if (error.status === 404) {
+      return 'This pipeline run is no longer available.';
+    }
+  }
+  return 'The pipeline run could not be resumed. Please try again.';
+}
 
 export function DashboardPage() {
   const [reminderOpen, setReminderOpen] = useState(false);
@@ -44,6 +61,7 @@ export function DashboardPage() {
         : undefined);
   const latestCompletedRun = dashboard.latestCompleted.data?.data[0];
   const recentRuns = dashboard.recentExecutions.data?.data ?? [];
+  const resumeErrorMessage = getResumeErrorMessage(dashboard.resumeMutation.error);
 
   function openReminder() {
     dashboard.startMutation.reset();
@@ -67,7 +85,10 @@ export function DashboardPage() {
         description="Start and monitor the keyword research pipeline, review ready inputs, and access recent results."
         actions={
           <>
-            <StartPipelineButton onClick={openReminder} />
+            <StartPipelineButton
+              disabled={dashboard.resumeMutation.isPending}
+              onClick={openReminder}
+            />
             <Button
               type="button"
               variant="outline"
@@ -139,6 +160,11 @@ export function DashboardPage() {
           title="Recent Pipeline Runs"
           description="The five most recent previous executions."
         />
+        {resumeErrorMessage ? (
+          <p role="alert" className="text-sm text-destructive">
+            {resumeErrorMessage}
+          </p>
+        ) : null}
         <DataTableShell
           isLoading={dashboard.recentExecutions.isPending && !dashboard.recentExecutions.data}
           loadingState={<LoadingState label="Loading recent pipeline runs…" rows={5} />}
@@ -160,7 +186,14 @@ export function DashboardPage() {
             />
           }
         >
-          <RecentPipelineRunsTable runs={recentRuns} />
+          <RecentPipelineRunsTable
+            runs={recentRuns}
+            activeExecutionId={dashboard.activeExecutionId}
+            isResumePending={dashboard.resumeMutation.isPending}
+            isStartPending={dashboard.startMutation.isPending}
+            resumingExecutionId={dashboard.resumeMutation.variables}
+            onResume={(executionId) => dashboard.resumeMutation.mutate(executionId)}
+          />
         </DataTableShell>
       </div>
 
