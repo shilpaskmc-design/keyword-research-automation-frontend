@@ -5,6 +5,7 @@ import {
   getExecutionDetail,
   getLatestExecution,
   getPipelineExecutions,
+  resumePipelineExecution,
   startPipeline,
   type PipelineExecutionStatus,
 } from '@/features/dashboard/api/dashboardApi';
@@ -89,6 +90,25 @@ export function useDashboard() {
     },
   });
 
+  const resumeMutation = useMutation({
+    mutationFn: resumePipelineExecution,
+    onSuccess: (queuedExecution) => {
+      const executionId = queuedExecution.pipeline_execution_id;
+      handledTerminalExecutionIds.current.delete(executionId);
+      setTerminalExecutionId(undefined);
+      queryClient.removeQueries({ queryKey: executionDetailQueryKey(executionId), exact: true });
+      setStartedExecutionId(executionId);
+      void queryClient.invalidateQueries({ queryKey: latestExecutionQueryKey });
+      void queryClient.invalidateQueries({ queryKey: ['pipeline', 'recent'] });
+    },
+    onError: (error) => {
+      if (isApiError(error) && (error.status === 404 || error.status === 409)) {
+        void queryClient.invalidateQueries({ queryKey: latestExecutionQueryKey });
+        void queryClient.invalidateQueries({ queryKey: ['pipeline', 'recent'] });
+      }
+    },
+  });
+
   useEffect(() => {
     const detail = executionDetail.data;
     if (!activeExecutionId || !detail || isActiveExecutionStatus(detail.status)) return;
@@ -112,6 +132,7 @@ export function useDashboard() {
     latestCompleted,
     latestExecution,
     recentExecutions,
+    resumeMutation,
     startMutation,
   };
 }

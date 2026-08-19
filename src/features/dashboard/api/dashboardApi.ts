@@ -15,10 +15,13 @@ type StartOperation = operations['start_pipeline_execution_api_v1_pipeline_runs_
 type LatestOperation = operations['get_latest_pipeline_execution_api_v1_pipeline_runs_latest_get'];
 type DetailOperation =
   operations['get_pipeline_execution_api_v1_pipeline_runs__pipeline_execution_id__get'];
+type ResumeOperation =
+  operations['resume_pipeline_execution_api_v1_pipeline_runs__pipeline_execution_id__resume_post'];
 
 type StartEnvelope = StartOperation['responses'][202]['content']['application/json'];
 type LatestEnvelope = LatestOperation['responses'][200]['content']['application/json'];
 type DetailEnvelope = DetailOperation['responses'][200]['content']['application/json'];
+type ResumeEnvelope = ResumeOperation['responses'][202]['content']['application/json'];
 
 export type PipelineExecutionDetail = DetailEnvelope['data'];
 
@@ -45,6 +48,14 @@ export async function getExecutionDetail(
   const result = await requestJson<DetailEnvelope['data'], DetailEnvelope['meta']>(
     `/api/v1/pipeline/runs/${pipelineExecutionId}`,
     options
+  );
+  return result.data;
+}
+
+export async function resumePipelineExecution(pipelineExecutionId: string) {
+  const result = await requestJson<ResumeEnvelope['data'], ResumeEnvelope['meta']>(
+    `/api/v1/pipeline/runs/${pipelineExecutionId}/resume`,
+    { method: 'POST' }
   );
   return result.data;
 }
