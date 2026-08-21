@@ -488,6 +488,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/raw-data/manual-intake/{intake_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Manual Intake */
+        delete: operations["delete_manual_intake_api_v1_raw_data_manual_intake__intake_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/raw-data/manual-intake/{intake_id}/cancel": {
         parameters: {
             query?: never;
@@ -1019,6 +1036,8 @@ export interface components {
         };
         /** ManualIntakeHistoryResponse */
         ManualIntakeHistoryResponse: {
+            /** Allowed Actions */
+            allowed_actions?: ("cancel" | "delete")[];
             /** Extra Data */
             extra_data?: {
                 [key: string]: unknown;
@@ -1058,6 +1077,8 @@ export interface components {
         };
         /** ManualIntakeResponse */
         ManualIntakeResponse: {
+            /** Allowed Actions */
+            allowed_actions?: ("cancel" | "delete")[];
             /** Extra Data */
             extra_data?: {
                 [key: string]: unknown;
@@ -1774,6 +1795,20 @@ export interface components {
         /** SuccessResponse[Union[PipelineSchedulePublic, NoneType]] */
         SuccessResponse_Union_PipelineSchedulePublic__NoneType__: {
             data: components["schemas"]["PipelineSchedulePublic"] | null;
+            meta: components["schemas"]["ResponseMeta"];
+            /**
+             * Status
+             * @default success
+             * @constant
+             */
+            status: "success";
+        };
+        /** SuccessResponse[dict[str, bool]] */
+        SuccessResponse_dict_str__bool__: {
+            /** Data */
+            data: {
+                [key: string]: boolean;
+            };
             meta: components["schemas"]["ResponseMeta"];
             /**
              * Status
@@ -2985,6 +3020,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SuccessResponse_ManualIntakeSummaryResponse_"];
+                };
+            };
+        };
+    };
+    delete_manual_intake_api_v1_raw_data_manual_intake__intake_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                intake_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_dict_str__bool__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };

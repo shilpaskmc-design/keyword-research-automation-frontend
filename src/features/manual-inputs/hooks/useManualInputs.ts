@@ -1,6 +1,8 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createManualInput,
+  cancelManualInput,
+  deleteManualInput,
   getManualInputs,
   getManualInputSummary,
   uploadManualInputs,
@@ -48,4 +50,23 @@ export function useUploadManualInputs() {
   const invalidate = useManualInputInvalidation();
 
   return useMutation({ mutationFn: uploadManualInputs, onSuccess: invalidate });
+}
+
+export function useCancelManualInput() {
+  const invalidate = useManualInputInvalidation();
+  return useMutation({
+    mutationFn: ({
+      intakeId,
+      body,
+    }: {
+      intakeId: number;
+      body: Parameters<typeof cancelManualInput>[1];
+    }) => cancelManualInput(intakeId, body),
+    onSuccess: invalidate,
+  });
+}
+
+export function useDeleteManualInput() {
+  const invalidate = useManualInputInvalidation();
+  return useMutation({ mutationFn: deleteManualInput, onSuccess: invalidate });
 }
