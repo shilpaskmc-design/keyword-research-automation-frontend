@@ -5,6 +5,10 @@ type ListOperation = operations['get_manual_intake_history_api_v1_raw_data_manua
 type SummaryOperation =
   operations['get_manual_intake_summary_api_v1_raw_data_manual_intake_summary_get'];
 type CreateOperation = operations['create_manual_entry_api_v1_raw_data_manual_entry_post'];
+type CancelOperation =
+  operations['cancel_manual_intake_api_v1_raw_data_manual_intake__intake_id__cancel_post'];
+type DeleteOperation =
+  operations['delete_manual_intake_api_v1_raw_data_manual_intake__intake_id__delete'];
 type UploadOperation = operations['upload_excel_api_v1_raw_data_upload_excel_post'];
 
 type ListEnvelope = ListOperation['responses'][200]['content']['application/json'];
@@ -12,6 +16,9 @@ type SummaryEnvelope = SummaryOperation['responses'][200]['content']['applicatio
 type CreateBody = CreateOperation['requestBody']['content']['application/json'];
 type CreateEnvelope = CreateOperation['responses'][201]['content']['application/json'];
 type UploadEnvelope = UploadOperation['responses'][201]['content']['application/json'];
+type CancelBody = CancelOperation['requestBody']['content']['application/json'];
+type CancelEnvelope = CancelOperation['responses'][200]['content']['application/json'];
+type DeleteEnvelope = DeleteOperation['responses'][200]['content']['application/json'];
 
 export type ManualInputRecord = ListEnvelope['data'][number];
 export type ManualInputSummary = SummaryEnvelope['data'];
@@ -78,5 +85,21 @@ export async function uploadManualInputs(file: File) {
     }
   );
 
+  return result.data;
+}
+
+export async function cancelManualInput(intakeId: number, body: CancelBody) {
+  const result = await requestJson<CancelEnvelope['data'], CancelEnvelope['meta'], CancelBody>(
+    `/api/v1/raw-data/manual-intake/${intakeId}/cancel`,
+    { method: 'POST', body }
+  );
+  return result.data;
+}
+
+export async function deleteManualInput(intakeId: number) {
+  const result = await requestJson<DeleteEnvelope['data'], DeleteEnvelope['meta']>(
+    `/api/v1/raw-data/manual-intake/${intakeId}`,
+    { method: 'DELETE' }
+  );
   return result.data;
 }

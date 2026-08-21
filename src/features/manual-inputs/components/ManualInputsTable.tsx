@@ -2,6 +2,7 @@ import type { ManualInputRecord } from '@/features/manual-inputs/api/manualInput
 import { AdditionalDetailsDisplay } from '@/features/manual-inputs/components/AdditionalDetailsDisplay';
 import { ManualInputStatusBadge } from '@/features/manual-inputs/components/ManualInputStatusBadge';
 import { ManualInputValidationInfo } from '@/features/manual-inputs/components/ManualInputValidationInfo';
+import { ManualInputActions } from '@/features/manual-inputs/components/ManualInputActions';
 
 interface ManualInputsTableProps {
   records: ManualInputRecord[];
@@ -30,6 +31,9 @@ export function ManualInputsTable({ records, showValidation }: ManualInputsTable
               Validation Error
             </th>
           ) : null}
+          <th scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wide">
+            Action
+          </th>
         </tr>
       </thead>
       <tbody className="divide-y">
@@ -52,6 +56,9 @@ export function ManualInputsTable({ records, showValidation }: ManualInputsTable
                 <ManualInputValidationInfo record={record} />
               </td>
             ) : null}
+            <td className="px-4 py-4">
+              <ManualInputActions record={record} />
+            </td>
           </tr>
         ))}
       </tbody>

@@ -389,6 +389,7 @@ GET  /api/v1/raw-data/manual-intake/summary
 POST /api/v1/raw-data/manual-entry
 POST /api/v1/raw-data/upload-excel
 POST /api/v1/raw-data/manual-intake/{intake_id}/cancel
+DELETE /api/v1/raw-data/manual-intake/{intake_id}
 ```
 
 Supported list concepts:
